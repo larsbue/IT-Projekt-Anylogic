@@ -366,7 +366,7 @@ numberOfTaxis = excelData.getLastRowNum(excelTaxiSheetName)-1;
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[48.139252]]></Code>
+							<Code><![CDATA[52.378717802851966]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1549970706895</Id>
@@ -390,7 +390,7 @@ numberOfTaxis = excelData.getLastRowNum(excelTaxiSheetName)-1;
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[11.565668]]></Code>
+							<Code><![CDATA[9.741603768321951]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1549970715265</Id>
@@ -1407,8 +1407,8 @@ item.inState(item.searchCharger)]]></Condition>
 					<Height>780</Height>
 					<GISShapes>
 					</GISShapes>
-					<Latitude>48.152596792645525</Latitude>
-					<Longitude>11.564811252561823</Longitude>
+					<Latitude>52.378717802851966</Latitude>
+					<Longitude>9.741603768321951</Longitude>
 					<Scale>100000</Scale>
 					<BorderColor>-4144960</BorderColor>
 					<FillColor>-1</FillColor>
