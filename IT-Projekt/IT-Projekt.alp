@@ -35,7 +35,8 @@ for(int i=2; i<=excelData.getLastRowNum(excelTaxiSheetName);i++){
 		excelData.getCellNumericValue(excelTaxiSheetName, i, 5),
 		excelData.getCellNumericValue(excelTaxiSheetName, i, 6),
 		excelData.getCellStringValue(excelTaxiSheetName, i, 7),
-		excelData.getCellNumericValue(excelTaxiSheetName, i, 2));
+		excelData.getCellNumericValue(excelTaxiSheetName, i, 2),
+		5);
 	}
 numberOfTaxis = excelData.getLastRowNum(excelTaxiSheetName)-1;
 	
@@ -366,7 +367,7 @@ numberOfTaxis = excelData.getLastRowNum(excelTaxiSheetName)-1;
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[52.378717802851966]]></Code>
+							<Code><![CDATA[52.3801]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1549970706895</Id>
@@ -390,7 +391,7 @@ numberOfTaxis = excelData.getLastRowNum(excelTaxiSheetName)-1;
 						<UnitType><![CDATA[NONE]]></UnitType>
 						<SdArray>false</SdArray>
 						<DefaultValue Class="CodeValue">
-							<Code><![CDATA[9.741603768321951]]></Code>
+							<Code><![CDATA[9.72039]]></Code>
 						</DefaultValue>
 						<ParameterEditor>
 							<Id>1549970715265</Id>
@@ -837,6 +838,9 @@ numberOfTaxis = excelData.getLastRowNum(excelTaxiSheetName)-1;
 						</Parameter>
 						<Parameter>
 							<Name><![CDATA[startLocationLong]]></Name>
+						</Parameter>
+						<Parameter>
+							<Name><![CDATA[capacity]]></Name>
 						</Parameter>
 					</Parameters>
 					<ReplicationFlag>true</ReplicationFlag>
@@ -2854,7 +2858,7 @@ currentOrder=null;]]></Action>
 						<Point><X>0</X><Y>40</Y></Point>
 					</Points>
 					<Properties Target="1543231892012">
-						<Action><![CDATA[tTaxi = main.add_testTaxis(48.139252, 11.565668);]]></Action>
+						<Action><![CDATA[tTaxi = main.add_testTaxis(52.378717802851966, 9.741603768321951);]]></Action>
 					</Properties>	
 				</StatechartElement>
 				<StatechartElement Class="Transition" ParentState="waitOrder" ParentStateId="1543231892012">
@@ -3764,21 +3768,6 @@ NextPassengerDestinationLong=main.excelData.getCellNumericValue(
 					</Properties>
 				</Variable>
 				<Variable Class="PlainVariable">
-					<Id>1547141812017</Id>
-					<Name><![CDATA[available]]></Name>
-					<X>50</X><Y>390</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
-						<Type><![CDATA[boolean]]></Type>        
-						<InitialValue Class="CodeValue">
-							<Code><![CDATA[true]]></Code>
-						</InitialValue>
-					</Properties>
-				</Variable>
-				<Variable Class="PlainVariable">
 					<Id>1547141812019</Id>
 					<Name><![CDATA[queuePosition]]></Name>
 					<X>50</X><Y>350</Y>
@@ -3898,6 +3887,36 @@ NextPassengerDestinationLong=main.excelData.getCellNumericValue(
 						<Type><![CDATA[testTaxi]]></Type>        
 						<InitialValue Class="CodeValue">
 							<Code><![CDATA[null]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1641831794963</Id>
+					<Name><![CDATA[passengerList]]></Name>
+					<X>50</X><Y>390</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[List<passenger>]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[new ArrayList<passenger>();]]></Code>
+						</InitialValue>
+					</Properties>
+				</Variable>
+				<Variable Class="PlainVariable">
+					<Id>1641831926076</Id>
+					<Name><![CDATA[available]]></Name>
+					<X>50</X><Y>410</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
+						<Type><![CDATA[boolean]]></Type>        
+						<InitialValue Class="CodeValue">
+							<Code><![CDATA[true]]></Code>
 						</InitialValue>
 					</Properties>
 				</Variable>
@@ -4027,6 +4046,30 @@ NextPassengerDestinationLong=main.excelData.getCellNumericValue(
 						</ParameterEditor>
 					</Properties>                 
 				</Variable>
+				<Variable Class="Parameter">
+					<Id>1641301020213</Id>
+					<Name><![CDATA[capacity]]></Name>
+					<X>50</X><Y>100</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties SaveInSnapshot="true" ModificatorType="STATIC">
+						<Type><![CDATA[double]]></Type>
+						<UnitType><![CDATA[NONE]]></UnitType>
+						<SdArray>false</SdArray>
+						<DefaultValue Class="CodeValue">
+							<Code><![CDATA[5]]></Code>
+						</DefaultValue>
+						<ParameterEditor>
+							<Id>1641301020211</Id>
+							<EditorContolType>TEXT_BOX</EditorContolType>
+							<MinSliderValue><![CDATA[0]]></MinSliderValue>
+							<MaxSliderValue><![CDATA[100]]></MaxSliderValue>
+							<DelimeterType>NO_DELIMETER</DelimeterType>
+						</ParameterEditor>
+					</Properties>                 
+				</Variable>
 			</Variables>
 			<StatechartElements>
 				<StatechartElement Class="State" ParentState="ROOT_NODE">
@@ -4069,7 +4112,7 @@ moving=true;
 				<StatechartElement Class="State" ParentState="ROOT_NODE">
 					<Id>1547141872481</Id>
 					<Name><![CDATA[checkCapacity]]></Name>
-					<X>650</X><Y>390</Y>
+					<X>650</X><Y>430</Y>
 					<Label><X>30</X><Y>20</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4087,7 +4130,7 @@ moving=false;
 				<StatechartElement Class="State" ParentState="ROOT_NODE">
 					<Id>1547141873769</Id>
 					<Name><![CDATA[moveToCharger]]></Name>
-					<X>900</X><Y>475</Y>
+					<X>900</X><Y>490</Y>
 					<Label><X>30</X><Y>20</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4105,8 +4148,10 @@ moving=false;
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
 					<Properties Width="150" Height="40">
-						<EntryAction><![CDATA[available=false;
-totalPassengers+=1;]]></EntryAction>
+						<EntryAction><![CDATA[available=true;
+totalPassengers+=1;
+passengerList.add(Passenger);
+System.out.println(passengerList.toString());]]></EntryAction>
 						<FillColor/>
 					</Properties>
 				</StatechartElement>
@@ -4125,7 +4170,7 @@ totalPassengers+=1;]]></EntryAction>
 				<StatechartElement Class="State" ParentState="ROOT_NODE">
 					<Id>1547141875632</Id>
 					<Name><![CDATA[moveToDestination]]></Name>
-					<X>650</X><Y>300</Y>
+					<X>650</X><Y>340</Y>
 					<Label><X>20</X><Y>20</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4149,7 +4194,7 @@ totalPassengers+=1;]]></EntryAction>
 				<StatechartElement Class="State" ParentState="ROOT_NODE">
 					<Id>1549971312413</Id>
 					<Name><![CDATA[moveToCenter]]></Name>
-					<X>400</X><Y>390</Y>
+					<X>400</X><Y>430</Y>
 					<Label><X>30</X><Y>20</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4186,7 +4231,7 @@ main.movingToCenter+=1;]]></EntryAction>
 				<StatechartElement Class="State" ParentState="ROOT_NODE">
 					<Id>1551269308166</Id>
 					<Name><![CDATA[searchCharger]]></Name>
-					<X>900</X><Y>390</Y>
+					<X>900</X><Y>430</Y>
 					<Label><X>35</X><Y>20</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4210,8 +4255,6 @@ tTaxi = main.add_testTaxis(this.getLat(), this.getLon());]]></EntryAction>
 						<Point><X>0</X><Y>65</Y></Point>
 					</Points>
 					<Properties Target="1547144398679">
-						<Action><![CDATA[
-]]></Action>
 					</Properties>	
 				</StatechartElement>
 				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
@@ -4413,14 +4456,14 @@ moving=true;
 				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
 					<Id>1547141999575</Id>
 					<Name><![CDATA[transition4]]></Name>
-					<X>725</X><Y>255</Y>
+					<X>720</X><Y>255</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>0</X><Y>45</Y></Point>
+						<Point><X>0</X><Y>85</Y></Point>
 					</Points>
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1547141874361" Target="1547141875632" Trigger="arrival">
@@ -4428,17 +4471,19 @@ moving=true;
 totalDrivenDistance+=distanceToNextNode;
 totalDistanceToPassenger+=distanceToNextNode;
 
-moveTo(this.Passenger.destinationLat, 
-	this.Passenger.destinationLong);
+Passenger = passengerList.get(passengerList.size()-1);
+
+moveTo(Passenger.destinationLat, 
+	Passenger.destinationLong);
 timeToNextArrival=timeToArrival();
 arrivalTime=time()+timeToNextArrival;
 distanceToNextNode=timeToNextArrival*main.taxiSpeed;
-send(this, this.Passenger);]]></Action>
+send(this, Passenger);]]></Action>
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
 						</Timeout>
-						<Condition><![CDATA[true]]></Condition>
+						<Condition><![CDATA[capacity == 5;]]></Condition>
 						<Rate Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="RateUnits"><![CDATA[PER_SECOND]]></Unit>
@@ -4453,16 +4498,16 @@ send(this, this.Passenger);]]></Action>
 				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
 					<Id>1547142006481</Id>
 					<Name><![CDATA[transition5]]></Name>
-					<X>800</X><Y>400</Y>
+					<X>800</X><Y>440</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>50</X><Y>0</Y></Point>
-						<Point><X>50</X><Y>-280</Y></Point>
-						<Point><X>-250</X><Y>-280</Y></Point>
+						<Point><X>50</X><Y>-40</Y></Point>
+						<Point><X>50</X><Y>-320</Y></Point>
+						<Point><X>-250</X><Y>-320</Y></Point>
 					</Points>
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1547141872481" Target="1547144398679" Trigger="condition">
@@ -4563,7 +4608,7 @@ if(currentRange>(maxRange*0.4)&&available==false){
 				<StatechartElement Class="Transition" ParentState="searchCharger" ParentStateId="1551269308166">
 					<Id>1547142030399</Id>
 					<Name><![CDATA[transition8]]></Name>
-					<X>1010</X><Y>390</Y>
+					<X>1010</X><Y>430</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4593,7 +4638,7 @@ if(currentRange>(maxRange*0.4)&&available==false){
 				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
 					<Id>1547142042447</Id>
 					<Name><![CDATA[transition9]]></Name>
-					<X>725</X><Y>340</Y>
+					<X>720</X><Y>380</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4608,6 +4653,7 @@ if(currentRange>(maxRange*0.4)&&available==false){
 totalDrivenDistance+=distanceToNextNode;
 totalDistancePassengerRoute+=distanceToNextNode;
 
+passengerList.remove(passengerList.indexOf(this.Passenger));
 this.Passenger = null;
 ]]></Action>
 						<Timeout Class="CodeUnitValue">
@@ -4629,7 +4675,7 @@ this.Passenger = null;
 				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
 					<Id>1547142050949</Id>
 					<Name><![CDATA[transition10]]></Name>
-					<X>800</X><Y>410</Y>
+					<X>800</X><Y>450</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4659,14 +4705,14 @@ this.Passenger = null;
 				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
 					<Id>1547142058615</Id>
 					<Name><![CDATA[transition11]]></Name>
-					<X>975</X><Y>515</Y>
+					<X>975</X><Y>530</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>0</X><Y>45</Y></Point>
+						<Point><X>0</X><Y>30</Y></Point>
 					</Points>
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1547141873769" Target="1547141875001" Trigger="arrival">
@@ -4859,7 +4905,7 @@ BookedStand.currentChargeUsage<BookedStand.chargeCapacity]]></Condition>
 					<ShowLabel>false</ShowLabel>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>0</X><Y>95</Y></Point>
+						<Point><X>0</X><Y>135</Y></Point>
 					</Points>
 					<IconOffset>15.0</IconOffset>
 					<Properties Source="1547141871961" Target="1549971312413" Trigger="timeout">
@@ -4882,7 +4928,7 @@ BookedStand.currentChargeUsage<BookedStand.chargeCapacity]]></Condition>
 				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
 					<Id>1549971475314</Id>
 					<Name><![CDATA[transition17]]></Name>
-					<X>550</X><Y>410</Y>
+					<X>550</X><Y>450</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -4919,16 +4965,16 @@ main.movingToCenter-=1;
 				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
 					<Id>1549971570769</Id>
 					<Name><![CDATA[transition18]]></Name>
-					<X>550</X><Y>400</Y>
+					<X>550</X><Y>440</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>50</X><Y>0</Y></Point>
-						<Point><X>50</X><Y>-165</Y></Point>
-						<Point><X>100</X><Y>-165</Y></Point>
+						<Point><X>50</X><Y>-40</Y></Point>
+						<Point><X>50</X><Y>-205</Y></Point>
+						<Point><X>100</X><Y>-205</Y></Point>
 					</Points>
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1549971312413" Target="1547141874361" Trigger="message">
@@ -4967,7 +5013,7 @@ main.movingToCenter-=1;]]></Action>
 				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
 					<Id>1549971625447</Id>
 					<Name><![CDATA[transition19]]></Name>
-					<X>550</X><Y>420</Y>
+					<X>550</X><Y>460</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -5006,14 +5052,14 @@ main.movingToCenter-=1;]]></Action>
 				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
 					<Id>1551269396849</Id>
 					<Name><![CDATA[transition20]]></Name>
-					<X>975</X><Y>430</Y>
+					<X>975</X><Y>470</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>0</X><Y>45</Y></Point>
+						<Point><X>0</X><Y>20</Y></Point>
 					</Points>
 					<IconOffset>20.0</IconOffset>
 					<Properties Source="1551269308166" Target="1547141873769" Trigger="condition">
@@ -6051,19 +6097,19 @@ main.remove_passengers( this );]]></Action>
 	</Experiments>
 	<ModelResources>
 		<Resource>
-			<Path><![CDATA[3d/person.dae]]></Path>
-			<ReferencedFromUserCode>false</ReferencedFromUserCode>
-		</Resource>
-		<Resource>
-			<Path><![CDATA[database/data_v1.xlsx]]></Path>
-			<ReferencedFromUserCode>false</ReferencedFromUserCode>
-		</Resource>
-		<Resource>
 			<Path><![CDATA[3d/lorry.dae]]></Path>
 			<ReferencedFromUserCode>false</ReferencedFromUserCode>
 		</Resource>
 		<Resource>
+			<Path><![CDATA[3d/person.dae]]></Path>
+			<ReferencedFromUserCode>false</ReferencedFromUserCode>
+		</Resource>
+		<Resource>
 			<Path><![CDATA[3d/warehouse.dae]]></Path>
+			<ReferencedFromUserCode>false</ReferencedFromUserCode>
+		</Resource>
+		<Resource>
+			<Path><![CDATA[database/data_v1.xlsx]]></Path>
 			<ReferencedFromUserCode>false</ReferencedFromUserCode>
 		</Resource>
 	</ModelResources>
