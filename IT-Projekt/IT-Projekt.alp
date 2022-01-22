@@ -3596,6 +3596,7 @@ NextPassengerDestinationLong=main.excelData.getCellNumericValue(
 			<Id>1547141753334</Id>
 			<Name><![CDATA[Taxi]]></Name>
 			<ClientAreaTopLeft><X>0</X><Y>0</Y></ClientAreaTopLeft>
+			<Import><![CDATA[import java.util.Collections;]]></Import>
 			<Generic>false</Generic>
 			<GenericParameter>
 				<Id>1547141753333</Id>
@@ -3901,7 +3902,7 @@ NextPassengerDestinationLong=main.excelData.getCellNumericValue(
 					<Properties SaveInSnapshot="true" Constant="false" AccessType="public" StaticVariable="false">
 						<Type><![CDATA[List<passenger>]]></Type>        
 						<InitialValue Class="CodeValue">
-							<Code><![CDATA[new ArrayList<passenger>();]]></Code>
+							<Code><![CDATA[new ArrayList<>();]]></Code>
 						</InitialValue>
 					</Properties>
 				</Variable>
@@ -4120,6 +4121,7 @@ moving=true;
 					<Properties Width="150" Height="40">
 						<EntryAction><![CDATA[available=false;
 moving=false;
+System.out.println(passengerList.toString());
 
 
 
@@ -4147,10 +4149,10 @@ moving=false;
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>true</ShowLabel>
-					<Properties Width="150" Height="40">
+					<Properties Width="150" Height="45">
 						<EntryAction><![CDATA[available=true;
 totalPassengers+=1;
-passengerList.add(Passenger);
+passengerList.add(passengerList.size(),this.Passenger);
 System.out.println(passengerList.toString());]]></EntryAction>
 						<FillColor/>
 					</Properties>
@@ -4239,6 +4241,20 @@ main.movingToCenter+=1;]]></EntryAction>
 					<Properties Width="150" Height="40">
 						<EntryAction><![CDATA[main.waitingCharger+=1;
 tTaxi = main.add_testTaxis(this.getLat(), this.getLon());]]></EntryAction>
+						<FillColor/>
+					</Properties>
+				</StatechartElement>
+				<StatechartElement Class="State" ParentState="ROOT_NODE">
+					<Id>1642082296202</Id>
+					<Name><![CDATA[moveToPassenger1]]></Name>
+					<X>650</X><Y>280</Y>
+					<Label><X>25</X><Y>20</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties Width="150" Height="40">
+						<EntryAction><![CDATA[this.Passenger = null;
+]]></EntryAction>
 						<FillColor/>
 					</Properties>
 				</StatechartElement>
@@ -4362,8 +4378,8 @@ else{}
 	
 
 
-Passenger = msg.passenger;
-moveTo(Passenger);
+this.Passenger = msg.passenger;
+moveTo(this.Passenger);
 timeToNextArrival=timeToArrival();
 arrivalTime=time()+timeToNextArrival;
 distanceToNextNode=timeToNextArrival*main.taxiSpeed;
@@ -4436,6 +4452,8 @@ timeToNextArrival=timeToArrival();
 arrivalTime=time()+timeToNextArrival;
 distanceToNextNode=timeToNextArrival*main.taxiSpeed;
 moving=true;
+
+System.out.println(msg.passenger);
 ]]></Action>
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
@@ -4456,17 +4474,17 @@ moving=true;
 				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
 					<Id>1547141999575</Id>
 					<Name><![CDATA[transition4]]></Name>
-					<X>720</X><Y>255</Y>
+					<X>720</X><Y>320</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>0</X><Y>85</Y></Point>
+						<Point><X>0</X><Y>20</Y></Point>
 					</Points>
 					<IconOffset>20.0</IconOffset>
-					<Properties Source="1547141874361" Target="1547141875632" Trigger="arrival">
+					<Properties Source="1642082296202" Target="1547141875632" Trigger="condition">
 						<Action><![CDATA[currentRange-=distanceToNextNode;
 totalDrivenDistance+=distanceToNextNode;
 totalDistanceToPassenger+=distanceToNextNode;
@@ -4477,13 +4495,12 @@ moveTo(Passenger.destinationLat,
 	Passenger.destinationLong);
 timeToNextArrival=timeToArrival();
 arrivalTime=time()+timeToNextArrival;
-distanceToNextNode=timeToNextArrival*main.taxiSpeed;
-send(this, Passenger);]]></Action>
+distanceToNextNode=timeToNextArrival*main.taxiSpeed;]]></Action>
 						<Timeout Class="CodeUnitValue">
-							<Code><![CDATA[1]]></Code>
+							<Code><![CDATA[10]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
 						</Timeout>
-						<Condition><![CDATA[capacity == 5;]]></Condition>
+						<Condition><![CDATA[passengerList.size() == 5;]]></Condition>
 						<Rate Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="RateUnits"><![CDATA[PER_SECOND]]></Unit>
@@ -4645,6 +4662,7 @@ if(currentRange>(maxRange*0.4)&&available==false){
 					<ShowLabel>false</ShowLabel>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>0</X><Y>10</Y></Point>
 						<Point><X>0</X><Y>50</Y></Point>
 					</Points>
 					<IconOffset>20.0</IconOffset>
@@ -4652,8 +4670,10 @@ if(currentRange>(maxRange*0.4)&&available==false){
 						<Action><![CDATA[currentRange-=distanceToNextNode;
 totalDrivenDistance+=distanceToNextNode;
 totalDistancePassengerRoute+=distanceToNextNode;
+capacity-=1;
 
-passengerList.remove(passengerList.indexOf(this.Passenger));
+send("destroy",this.Passenger);
+passengerList.remove(this.Passenger);
 this.Passenger = null;
 ]]></Action>
 						<Timeout Class="CodeUnitValue">
@@ -5097,6 +5117,156 @@ tTaxi=null;]]></Action>
 						<SatisfiesExpression><![CDATA[true]]></SatisfiesExpression>
 					</Properties>	
 				</StatechartElement>
+				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
+					<Id>1642082271390</Id>
+					<Name><![CDATA[transition21]]></Name>
+					<X>720</X><Y>260</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>0</X><Y>20</Y></Point>
+					</Points>
+					<IconOffset>20.0</IconOffset>
+					<Properties Source="1547141874361" Target="1642082296202" Trigger="arrival">
+						<Action><![CDATA[send(this, this.Passenger);]]></Action>
+						<Timeout Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						</Timeout>
+						<Condition><![CDATA[capacity == 5;]]></Condition>
+						<Rate Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="RateUnits"><![CDATA[PER_SECOND]]></Unit>
+						</Rate>
+						<MessageType><![CDATA[Object]]></MessageType>
+						<DefaultTransition>true</DefaultTransition>
+						<FilterType><![CDATA[unconditionally]]></FilterType>
+						<EqualsExpression><![CDATA["text"]]></EqualsExpression>
+						<SatisfiesExpression><![CDATA[true]]></SatisfiesExpression>
+					</Properties>	
+				</StatechartElement>
+				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
+					<Id>1642082641218</Id>
+					<Name><![CDATA[transition22]]></Name>
+					<X>750</X><Y>280</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>0</X><Y>-20</Y></Point>
+					</Points>
+					<IconOffset>20.0</IconOffset>
+					<Properties Source="1642082296202" Target="1547141874361" Trigger="message">
+						<Action><![CDATA[this.Passenger = msg.passenger;
+moveTo(this.Passenger);
+timeToNextArrival=timeToArrival();
+arrivalTime=time()+timeToNextArrival;
+distanceToNextNode=timeToNextArrival*main.taxiSpeed;
+moving=true;
+]]></Action>
+						<Timeout Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						</Timeout>
+						<Condition><![CDATA[true]]></Condition>
+						<Rate Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="RateUnits"><![CDATA[PER_SECOND]]></Unit>
+						</Rate>
+						<MessageType><![CDATA[Order]]></MessageType>
+						<DefaultTransition>true</DefaultTransition>
+						<FilterType><![CDATA[unconditionally]]></FilterType>
+						<EqualsExpression><![CDATA["text"]]></EqualsExpression>
+						<SatisfiesExpression><![CDATA[passengerList.size() < 5;]]></SatisfiesExpression>
+					</Properties>	
+				</StatechartElement>
+				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
+					<Id>1642083399284</Id>
+					<Name><![CDATA[transition23]]></Name>
+					<X>680</X><Y>430</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>0</X><Y>-50</Y></Point>
+					</Points>
+					<IconOffset>20.0</IconOffset>
+					<Properties Source="1547141872481" Target="1547141875632" Trigger="condition">
+						<Action><![CDATA[currentRange-=distanceToNextNode;
+totalDrivenDistance+=distanceToNextNode;
+totalDistanceToPassenger+=distanceToNextNode;
+
+Passenger = passengerList.get(passengerList.size()-1);
+
+moveTo(Passenger.destinationLat, 
+	Passenger.destinationLong);
+timeToNextArrival=timeToArrival();
+arrivalTime=time()+timeToNextArrival;
+distanceToNextNode=timeToNextArrival*main.taxiSpeed;]]></Action>
+						<Timeout Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						</Timeout>
+						<Condition><![CDATA[passengerList.size() > 0;]]></Condition>
+						<Rate Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="RateUnits"><![CDATA[PER_SECOND]]></Unit>
+						</Rate>
+						<MessageType><![CDATA[Object]]></MessageType>
+						<DefaultTransition>true</DefaultTransition>
+						<FilterType><![CDATA[unconditionally]]></FilterType>
+						<EqualsExpression><![CDATA["text"]]></EqualsExpression>
+						<SatisfiesExpression><![CDATA[true]]></SatisfiesExpression>
+					</Properties>	
+				</StatechartElement>
+				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
+					<Id>1642437851129</Id>
+					<Name><![CDATA[transition24]]></Name>
+					<X>690</X><Y>320</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>0</X><Y>20</Y></Point>
+					</Points>
+					<IconOffset>20.0</IconOffset>
+					<Properties Source="1642082296202" Target="1547141875632" Trigger="timeout">
+						<Action><![CDATA[currentRange-=distanceToNextNode;
+totalDrivenDistance+=distanceToNextNode;
+totalDistanceToPassenger+=distanceToNextNode;
+
+Passenger = passengerList.get(passengerList.size()-1);
+
+moveTo(Passenger.destinationLat, 
+	Passenger.destinationLong);
+timeToNextArrival=timeToArrival();
+arrivalTime=time()+timeToNextArrival;
+distanceToNextNode=timeToNextArrival*main.taxiSpeed;]]></Action>
+						<Timeout Class="CodeUnitValue">
+							<Code><![CDATA[10]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						</Timeout>
+						<Condition><![CDATA[passengerList.size() == 5;]]></Condition>
+						<Rate Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="RateUnits"><![CDATA[PER_SECOND]]></Unit>
+						</Rate>
+						<MessageType><![CDATA[Object]]></MessageType>
+						<DefaultTransition>true</DefaultTransition>
+						<FilterType><![CDATA[unconditionally]]></FilterType>
+						<EqualsExpression><![CDATA["text"]]></EqualsExpression>
+						<SatisfiesExpression><![CDATA[true]]></SatisfiesExpression>
+					</Properties>	
+				</StatechartElement>
 			</StatechartElements>
 			<Functions>
 				<Function AccessType="default" StaticFunction="false">
@@ -5503,13 +5673,25 @@ return true;]]></Body>
 				<StatechartElement Class="FinalState" ParentState="ROOT_NODE">
 					<Id>1548424420964</Id>
 					<Name><![CDATA[finalState]]></Name>
-					<X>410</X><Y>390</Y>
+					<X>410</X><Y>450</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
 					<ShowLabel>false</ShowLabel>
 					<Properties>	
 					</Properties>	
+				</StatechartElement>
+				<StatechartElement Class="State" ParentState="ROOT_NODE">
+					<Id>1642419134734</Id>
+					<Name><![CDATA[waitingForDestroy]]></Name>
+					<X>330</X><Y>380</Y>
+					<Label><X>40</X><Y>20</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>true</ShowLabel>
+					<Properties Width="160" Height="40">
+						<FillColor/>
+					</Properties>
 				</StatechartElement>
 				<StatechartElement Class="EntryPoint" ParentState="ROOT_NODE">
 					<Id>1548424420966</Id>
@@ -5576,15 +5758,14 @@ askingRide=false;]]></Action>
 					<ShowLabel>false</ShowLabel>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>0</X><Y>42</Y></Point>
+						<Point><X>0</X><Y>40</Y></Point>
 					</Points>
 					<IconOffset>20.0</IconOffset>
-					<Properties Source="1548424420962" Target="1548424420964" Trigger="message">
+					<Properties Source="1548424420962" Target="1642419134734" Trigger="message">
 						<Action><![CDATA[waitingTime=time()-dispatchTime+waitingTime;
 main.passengersPickedUp+=1;
 main.waitingTime.add(waitingTime);
-main.waitingTimeStat.add(waitingTime, time());
-main.remove_passengers( this );]]></Action>
+main.waitingTimeStat.add(waitingTime, time());]]></Action>
 						<Timeout Class="CodeUnitValue">
 							<Code><![CDATA[1]]></Code>
 							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
@@ -5630,6 +5811,37 @@ main.remove_passengers( this );]]></Action>
 						<FilterType><![CDATA[unconditionally]]></FilterType>
 						<EqualsExpression><![CDATA["text"]]></EqualsExpression>
 						<SatisfiesExpression><![CDATA[true]]></SatisfiesExpression>
+					</Properties>	
+				</StatechartElement>
+				<StatechartElement Class="Transition" ParentState="ROOT_NODE">
+					<Id>1642419142574</Id>
+					<Name><![CDATA[transition3]]></Name>
+					<X>410</X><Y>420</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>0</X><Y>22</Y></Point>
+					</Points>
+					<IconOffset>20.0</IconOffset>
+					<Properties Source="1642419134734" Target="1548424420964" Trigger="message">
+						<Action><![CDATA[main.remove_passengers( this );]]></Action>
+						<Timeout Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="TimeUnits"><![CDATA[SECOND]]></Unit>
+						</Timeout>
+						<Condition><![CDATA[true]]></Condition>
+						<Rate Class="CodeUnitValue">
+							<Code><![CDATA[1]]></Code>
+							<Unit Class="RateUnits"><![CDATA[PER_SECOND]]></Unit>
+						</Rate>
+						<MessageType><![CDATA[String]]></MessageType>
+						<DefaultTransition>true</DefaultTransition>
+						<FilterType><![CDATA[equalsTo]]></FilterType>
+						<EqualsExpression><![CDATA["destroy"]]></EqualsExpression>
+						<SatisfiesExpression><![CDATA[msg.equals("destroy");]]></SatisfiesExpression>
 					</Properties>	
 				</StatechartElement>
 			</StatechartElements>
